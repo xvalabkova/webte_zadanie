@@ -1,0 +1,28 @@
+Dokumentácia, záverečné zadanie
+
+OCTAVE
+Zo stránky: https://techpiezo.com/linux/install-gnu-octave-in-ubuntu-20-04-lts/ 
+Príkazy:
+sudo apt update
+sudo apt install octave
+octave-cli
+
+LIBOCTAVE-DEV
+Zo stránky: https://octave2work.blogspot.com/2017/03/new-package-installation-steps.html 
+Príkazy:
+Step 1:Install liboctave-dev in linux terminal window as
+           sudo apt-get install liboctave-dev
+Step 2. Download image package from following link, Download latest one
+            https://octave.sourceforge.io/image/index.html
+Step3: run Octave
+Step 4: install image.2.6.1.tar.gz using pkg  as
+           pkg install image.2.6.1.tar.gz 
+
+
+FORGE PACKAGE CONTROL
+sudo apt-get install -y octave-control
+octave
+//in octave:
+>pkg load control
+
+
