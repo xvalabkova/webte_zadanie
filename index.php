@@ -11,7 +11,11 @@
 </head> 
 
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
-
+<?php 
+if(isset($_POST['go_btn'])){
+  header('Location: https://site187.webte.fei.stuba.sk/zav_zad/'.$_POST['lang']);
+}
+?>
 
 <body>  
   <section>
