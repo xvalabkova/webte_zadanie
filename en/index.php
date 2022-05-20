@@ -4,11 +4,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
         rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
    <meta charset="UTF-8"> 
-    <title>Zadanie</title>
+    <title>Assignement</title>
 </head> 
 
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
+<?php
+  if(isset($_POST['octave_command'])){
+    $command = strip_tags($_POST['oc_command']);
+    $command = str_replace(array("\n", "\r"), '', $command);
+    $commands = explode(";",$command);
+
+    $myfile = fopen("../form_commands.m", "w") or die("Unable to open file!");
+    $txt= "";
+
+    for($i=0; $i<sizeof($commands);$i++){
+      $txt = $txt."disp(\"$commands[$i]=\"),disp(".$commands[$i] .");";
+    }
+    fwrite($myfile, $txt);
+    fclose($myfile);
+
+    $cmd = "octave -qf ../form_commands.m ";
+    
+  }
+?>
 
 <body>
 
@@ -89,13 +108,14 @@
     <h5>Test command line for octave</h5>
 
     <form action="index.php" method="post" class="form-group">
+    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command'])){$ex=passthru($cmd, $output);}?></textarea>
       <div class="input-group">
 
-        <textarea id="command" name="command" aria-label="With textarea" class="form-control" style="height:18px;"></textarea>
+        <textarea id="command" name="oc_command" class="form-control" style="height:18px;"></textarea>
 
         <div class="input-group-append">
 
-          <button class="input-group-text btn btn-dark">Send</button>
+          <button class="input-group-text btn btn-dark" name="octave_command">Send</button>
 
         </div>
       </div>
