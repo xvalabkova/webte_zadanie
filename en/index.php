@@ -10,16 +10,18 @@
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
 <?php
-  if(isset($_POST['octave_command'])){
+  if(isset($_POST['octave_command_btn'])){
     $command = strip_tags($_POST['oc_command']);
     $command = str_replace(array("\n", "\r"), '', $command);
     $commands = explode(";",$command);
+  
 
     $myfile = fopen("../form_commands.m", "w") or die("Unable to open file!");
     $txt= "";
 
     for($i=0; $i<sizeof($commands);$i++){
-      $txt = $txt."disp(\"$commands[$i]=\"),disp(".$commands[$i] .");";
+      if($commands[$i]!="")
+        $txt = $txt."disp(\"$commands[$i]=\"),disp(".$commands[$i] .");";
     }
     fwrite($myfile, $txt);
     fclose($myfile);
@@ -108,14 +110,14 @@
     <h5>Test command line for octave</h5>
 
     <form action="index.php" method="post" class="form-group">
-    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command'])){$ex=passthru($cmd, $output);}?></textarea>
+    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command_btn'])){$ex=passthru($cmd, $output);}?></textarea>
       <div class="input-group">
 
         <textarea id="command" name="oc_command" class="form-control" style="height:18px;"></textarea>
 
         <div class="input-group-append">
 
-          <button class="input-group-text btn btn-dark" name="octave_command">Send</button>
+          <button class="input-group-text btn btn-dark" name="octave_command_btn">Send</button>
 
         </div>
       </div>
