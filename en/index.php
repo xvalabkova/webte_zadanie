@@ -59,37 +59,30 @@
               <br>
 
           <div class="form-group row">
-              <label for="spring_c1" class="col-sm-2 col-form-label">Spring Constant 1:</label>
+              <label for="height" class="col-sm-2 col-form-label">Obstacle height:</label>
               <div class="col-sm-5">
-                  <input type="text" class="form-control" id="spring_c1" name="k1" placeholder="N/m">
+                  <input type="text" class="form-control" id="height" name="r" placeholder="cm">
               </div>
           </div>
 
-          <div class="form-group row">
-              <label for="spring_c2" class="col-sm-2 col-form-label">Spring Constant 2:</label>
-              <div class="col-sm-5">
-                  <input type="text" class="form-control" id="spring_c2" name="k2" placeholder="N/m">
-              </div>
+          <br>
+
+          <div class="form-check">
+              <input class="form-check-input" type="checkbox" checked name="animation" id="animation">
+              <label class="form-check-label" for="animation">
+             Animation
+              </label>
           </div>
 
-              <br>
-
-          <div class="form-group row">
-              <label for="ampl1" class="col-sm-2 col-form-label">Amplitude 1</label>
-              <div class="col-sm-5">
-  	              <input id="ampl1" name="b1"  class="form-control" type="text" value="" placeholder="">
-              </div>
-          </div>
-
-          <div class="form-group row">
-              <label for="ampl2" class="col-sm-2 col-form-label">Amplitude 2</label>
-              <div class="col-sm-5">
-  	              <input id="ampl2" name="b2"  class="form-control" type="text" value="" placeholder="">
-              </div>
+          <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="graph">
+              <label class="form-check-label" for="graph">
+             Graph
+              </label>
           </div>
 
               <br>
-  	        <button id="params" name="params" class="btn btn-dark">Play animation</button><br><br>
+  	        <button id="params" name="params" class="btn btn-dark">Play</button><br><br>
           </form>
       </div>
   </div> 
