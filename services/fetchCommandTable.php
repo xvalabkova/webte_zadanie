@@ -5,5 +5,4 @@ require_once "../classes/Command.php";
 
 $data = $myPdo->run("SELECT * FROM logs")->fetchAll();
 echo json_encode($data);
-var_dump('asdasd');
 ?>
