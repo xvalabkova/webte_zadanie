@@ -3,32 +3,52 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
         rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-   <meta charset="UTF-8"> 
+    <meta charset="UTF-8"> 
     <title>Assignement</title>
 </head> 
 
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
 <?php
-  if(isset($_POST['octave_command_btn'])){
-    $command = strip_tags($_POST['oc_command']);
-    $command = str_replace(array("\n", "\r"), '', $command);
-    $commands = explode(";",$command);
-  
+    require_once "../config.php";
+    require_once "../classes/Command.php";
 
-    $myfile = fopen("../form_commands.m", "w") or die("Unable to open file!");
-    $txt= "";
+    if(isset($_POST['octave_command_btn'])){ 
+        $command = strip_tags($_POST['oc_command']);
+        $command = str_replace(array("\n", "\r"), '', $command);
+        $commands = explode(";",$command);
+        $commandLineOutput = "";
 
-    for($i=0; $i<sizeof($commands);$i++){
-      if($commands[$i]!="")
-        $txt = $txt."disp(\"$commands[$i]=\"),disp(".$commands[$i] .");";
+        foreach($commands as $command) {
+            $myfile = fopen("../form_commands.m", "w") or die("Unable to open file!");
+            $txt = "";
+            
+            if ($command != "") {
+                $txt = $txt."disp(\"$command=\"),disp(".$command .");\n";
+                fwrite($myfile, $txt);
+                fclose($myfile);
+                
+                $cmd = "octave -qf ../form_commands.m";
+
+                $output=null;
+                $retval=null;
+                exec($cmd.' 2>&1', $output, $retval);
+                
+                $commandLineOutput = $commandLineOutput.(implode($output))."\n";
+
+                try {
+                    $test = new Command($myPdo);
+                    $test->setCommand($command);
+                    $test->setExitCode($retval);
+                    $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
+                    $test->setTimestamp(date("H:i:s  d.m.Y"));
+                    $test->save(); 
+                } catch(PDOException $e) {
+                    echo "Error: ". $e->getMessage();
+                }
+            }
+        } 
     }
-    fwrite($myfile, $txt);
-    fclose($myfile);
-
-    $cmd = "octave -qf ../form_commands.m ";
-    
-  }
 ?>
 
 <body>
@@ -103,7 +123,7 @@
     <h5>Test command line for octave</h5>
 
     <form action="index.php" method="post" class="form-group">
-    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command_btn'])){$ex=passthru($cmd, $output);}?></textarea>
+    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command_btn'])){ echo $commandLineOutput; }?></textarea>
       <div class="input-group">
 
         <textarea id="command" name="oc_command" class="form-control" style="height:18px;"></textarea>

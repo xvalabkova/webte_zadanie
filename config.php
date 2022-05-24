@@ -1,21 +1,14 @@
 <?php
-
-
-// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
-$dbconfig = array(
-    'hostname' => 'localhost',
-    'username' => 'xvalabkova', //MySQL username
-    'password' => 'hesloheslo',
-    'database' => 'Zaver',
-);
+require_once "classes/MyPDO.php";
 
 // <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
-$db = new mysqli();
-$db->connect($dbconfig['hostname'],$dbconfig['username'],$dbconfig['password']);
-$db->select_db($dbconfig['database']);
-if(!$db){
-    die("Connection failed...");
-    //echo "<h1>Database connection error.</h1>";
-}
+$servername = "localhost";
+$dbname = "zaver";
+$username = "xpolednakp";
+$password = "ZAoSKBBUksTuJ8Q";
+
+// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+$myPdo = new MyPDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+?>
