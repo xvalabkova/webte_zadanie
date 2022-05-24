@@ -1,0 +1,80 @@
+body {
+    /* Wallpaper image je otázny, svetlo vľavo hore mi nedá spať */
+    background-image: url(../images/workshop-wallpaper.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 14px;
+    z-index: 1;
+}
+
+/* LAYOUT */
+
+.container-fluid {
+    margin: 0 auto;
+}
+
+.navbar {
+    font-size: 1.2rem;
+    padding: 0.5rem 0.2rem 2rem;
+}
+
+.navbar-dark .navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    color: royalblue;
+}
+
+.navbar-dark .navbar-brand:hover {
+    color: royalblue;
+}
+
+.nav-item {
+    padding: 0 12px;
+}
+
+.content {
+    position: relative;
+    background-size: contain;
+    z-index: 2;
+    min-width: 500px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    background: rgba(218, 221, 216, 0.85);
+}
+
+.row {
+    justify-content: left;
+}
+
+.one-to-one-grid {
+    display: grid;
+    grid-gap: 0.5rem;
+    grid-auto-rows: minmax(10px, auto);
+    grid-template-columns: 3fr 2fr;
+    text-align: left;
+}
+
+.canvases {
+    display: grid;
+    grid-gap: 0.5rem;
+    grid-auto-rows: minmax(10px, auto);
+    grid-template-columns: 1fr;
+}
+
+.hidden {
+    display: none;
+}
+
+#plot-canvas {
+    margin: auto;
+    width: 60rem;
+}
