@@ -25,6 +25,13 @@ octave
 //in octave:
 >pkg load control
 
+TCPDF LIBRARY
+Zo stránky:https://tcpdf.org/examples/example_006/
+v priecinku /home/x.../:
+sudo apt install php-tcpdf
+sudo service nginx restart
+
+
 BOOTSTRAP 
 CSS framework s ready-to-use triedami pre jednoduchú tvorbu vizuálne príjemným elementov a stránok
 Zo stránky: https://getbootstrap.com/docs/5.0/getting-started/introduction/
