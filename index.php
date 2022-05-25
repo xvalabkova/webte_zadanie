@@ -35,6 +35,11 @@ if (!isset($_SESSION['lang'])) {
     $_SESSION['lang'] = 'sk';
 }
 
+/*if(isset($_GET['sended']) && $_GET['sended']=="1" ){
+    echo'<script type="text/javascript">
+    document.getElementById("modal2").style.display = "block";
+    </script>';
+}*/
 if (isset($_POST['octave_command_btn'])) {
     $command = strip_tags($_POST['oc_command']);
     $command = str_replace(array("\n", "\r"), '', $command);
@@ -108,7 +113,10 @@ function langSwitch($skTranslation, $enTranslation)
                             <a id="placeholder2" class="nav-link"><?php langSwitch('Popis stránky', 'Site description'); ?></a>
                         </li>
                         <li class="nav-item">
-                            <a id="placeholder3" class="nav-link" href="services/fetchCommandTable.php"><?php langSwitch('Stiahnite logy', 'Download logs'); ?></a>
+                            <a id="placeholder3" class="nav-link" href="services/fetchCommandTable.php?mode=down"><?php langSwitch('Stiahnite logy', 'Download logs'); ?></a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="placeholder4" class="nav-link" href="services/fetchCommandTable.php?mode=mail"><?php langSwitch('Poši logy na mail', 'Send logs to mail'); ?></a>
                         </li>
                     </ul>
                 </div>
@@ -234,6 +242,15 @@ function langSwitch($skTranslation, $enTranslation)
             </div>
         </div>
     </div>
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <div class="close">&#10006;</div>
+            <div class="modaldata">
+            <?php langSwitch('Logy boli zaslané na mail', 'Logs have been sended to mail'); ?>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -245,6 +262,7 @@ function langSwitch($skTranslation, $enTranslation)
 
     <script src="scripts/plot.js" defer></script>
     <script src="scripts/main.js"></script>
+  
     <link href="styles/modal.css" rel="stylesheet">
 
 </body>
