@@ -5,7 +5,7 @@
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="xvalabkova, xpolednakp, xhancin">
-    <meta name="description" content="Computer Aided System - Oracle">
+    <meta name="description" content="Computer Aided System - Octave">
     
     <title>Webte2 Záverečné zadanie</title>
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
@@ -34,10 +34,12 @@
         $_SESSION['lang'] = 'sk';
     }
 
-    if(isset($_POST['octave_command_btn'])){ 
+// <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+    if(isset($_POST['octave_command_btn'])){        // if button for sending commands from command line was clicked
         $command = strip_tags($_POST['oc_command']);
         $command = str_replace(array("\n", "\r"), '', $command);
-        $commands = explode(";",$command);
+        $commands = explode(";",$command);          // seperate multiple commands
         $commandLineOutput = "";
 
         foreach($commands as $command) {
@@ -45,8 +47,8 @@
             $txt = "";
             
             if ($command != "") {
-                $txt = $txt."disp(\"$command=\"),disp(".$command .");\n";
-                fwrite($myfile, $txt);
+                $txt = $txt."disp(\"$command=\"),disp(".$command .");\n";       // prepare command to be executed by octave // expected output from octave: "1+1=2 \n"
+                fwrite($myfile, $txt);                                          // send command to file, that will be executed
                 fclose($myfile);
                 
                 $cmd = "octave -qf form_commands.m";
@@ -55,9 +57,13 @@
                 $retval=null;
                 exec($cmd.' 2>&1', $output, $retval);
                 
-                $commandLineOutput = $commandLineOutput.(implode($output))."\n";
+                $commandLineOutput = $commandLineOutput.(implode($output))."\n";    // may contain return values for multiple commands
 
-                try {
+
+                // <!-- -------------------------------------------------------------------- -->
+                // log to databaze, $myPdo is from file config.php 
+
+                try {             
                     $test = new Command($myPdo);
                     $test->setCommand($command);
                     $test->setExitCode($retval);
@@ -72,14 +78,20 @@
     }
 ?>
 
+ <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+
 <?php 
-function langSwitch($skTranslation, $enTranslation) {
+function langSwitch($skTranslation, $enTranslation) {       // function decides which value to print out based on the currently set language 
     if ($_SESSION['lang'] == 'sk') 
         echo $skTranslation; 
     else if ($_SESSION['lang'] == 'en') 
         echo $enTranslation;
 } 
 ?>
+
+ <!-- ---------------------------------------------------------------------------------------------------------------- -->
+<!-- Navbar -->
 
 <body>  
     <section id="title">
@@ -111,20 +123,28 @@ function langSwitch($skTranslation, $enTranslation) {
                 </ul>
             </div>
         </nav>
+        </div>
     </section>
 
+
+     <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+
     <section class="content">
-        <!-- container for adress input -->
         <div class="container">
         
             <div class="row justify-content-center">
                 <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page');?></h3>
+                
                 <!-- container for parameters -->
                 <div class="container">
                     <br>
                     <div class="row">
                         <h5 style="margin: 0 auto 1rem;"><?php langSwitch('Zvoľ paramatre', 'Fill in parameters:');?></h5>
+
+                        <!-- Form for weight of objects and height of obstacle -->
                         <form action="index.php" method="post" id="param-form" class="form-group">
+                            
                             <div class="one-to-one-grid">
                                 <div class="form-group row">
                                     <label for="weight1" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 1:', 'Weight 1:');?></label>
@@ -165,6 +185,9 @@ function langSwitch($skTranslation, $enTranslation) {
             </div>
         </div> 
 
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+    <!-- Divs prepared for canvases -->
+
         <div class="canvases" style="margin-bottom: 1rem;">
             <section>
                 <!-- animation -->
@@ -179,12 +202,16 @@ function langSwitch($skTranslation, $enTranslation) {
             </section>
         </div>
 
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+    <!-- Command line input -->
+
         <section>
             <!-- command line  -->
             <div class="container border">
                 <br>
                 <h5><?php langSwitch('Príkazový riadok pre Octave:', 'Test command line for Octave:');?></h5>
 
+                <!-- Form sends command to a function to be executed, then prints output -->
                 <form action="index.php" method="post" class="form-group">
                 <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command_btn'])){ echo $commandLineOutput; }?></textarea>
                 <div class="input-group">
@@ -206,6 +233,10 @@ function langSwitch($skTranslation, $enTranslation) {
     
     </section>
 
+
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     
@@ -216,5 +247,11 @@ function langSwitch($skTranslation, $enTranslation) {
     <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
    
     <script src="scripts/plot.js" defer></script>
+
+    <!-- p5.js library for animation -->
+    <script src="scripts/p5.js"></script>
+
+    <!-- My script, for animation -->
+    <script src="scripts/sketch.js"></script>
 </body>
 </html>
