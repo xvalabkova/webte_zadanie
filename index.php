@@ -58,7 +58,7 @@ if (isset($_POST['octave_command_btn'])) {
 
             $commandLineOutput = $commandLineOutput . (implode($output)) . "\n";
             //TODO data z konzoly
-            /*try {
+            try {
                     $test = new Command($myPdo);
                     $test->setCommand($command);
                     $test->setExitCode($retval);
@@ -67,7 +67,7 @@ if (isset($_POST['octave_command_btn'])) {
                     $test->save(); 
                 } catch(PDOException $e) {
                     echo "Error: ". $e->getMessage();
-                }*/
+                }
         }
     }
 }
@@ -108,7 +108,7 @@ function langSwitch($skTranslation, $enTranslation)
                             <a id="placeholder2" class="nav-link"><?php langSwitch('Popis stránky', 'Site description'); ?></a>
                         </li>
                         <li class="nav-item">
-                            <a id="placeholder3" class="nav-link" href="index.php"><?php langSwitch('Štatistika', 'Statistics'); ?></a>
+                            <a id="placeholder3" class="nav-link" href="services/fetchCommandTable.php"><?php langSwitch('Stiahnite logy', 'Download logs'); ?></a>
                         </li>
                     </ul>
                 </div>
