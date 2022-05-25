@@ -5,7 +5,7 @@ require_once "../classes/Command.php";
 
 $data = $myPdo->run("SELECT * FROM logs")->fetchAll();
 
-
+//Source of code: https://www.w3docs.com/snippets/php/automatic-download-file.html
 
 $filename = '../files/logs.csv';
 $f = fopen($filename, 'w');
