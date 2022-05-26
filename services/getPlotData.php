@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($data['r'] < 61 && $data['r'] > -61) {
             $paramDeclaration = $paramDeclaration."r = ".$data['r']."; ";
         }   else $overall_retval = -1;
-    } else $paramDeclaration = $paramDeclaration."r = 0.1; ";
-} else $paramDeclaration = "m1 = 2500; m2 = 320; r =0.1;";
+    } else $paramDeclaration = $paramDeclaration."r =20; ";
+} else $paramDeclaration = "m1 = 2500; m2 = 320; r =20;";
 
 $originalCode = "pkg load control; ".$paramDeclaration."
 

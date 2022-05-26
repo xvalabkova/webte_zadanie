@@ -256,8 +256,8 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
     <!-- Divs preparvases -->
 
-        <div class="canvases" style="margin-bottom: 1rem;">
-            <section>
+        <div class="canvases" id="animation-canvas2" style="margin-bottom: 1rem;"> 
+             <section id="sec">
                 <!-- animation -->
                 <div id="animation-canvas" class="container hidden">
                 </div>
