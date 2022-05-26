@@ -7,12 +7,23 @@ $email='frantisekbazos@gmail.com';
 $servername = "localhost";
 $dbname = "zaver";
 $username = "xhancin";
-$password = "xNT6Mf0aXZagQFw";
+$password = "xNT6Mf0aXZagQFw"; 
 
-// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+//$dbname = "Zaver";
+//$username = "xvalabkova";
+//$password = "hesloheslo";
+
+// $dbname = "zaver";
+// $username = "xpolednakp";
+// $password = "ZAoSKBBUksTuJ8Q";
+
+$simulation_coeficient = 70;
 
 $myPdo = new MyPDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+$apiKeyForOctaveAPI="you_have_to_write_this";
 ?>

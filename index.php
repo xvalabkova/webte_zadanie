@@ -117,7 +117,7 @@ function langSwitch($skTranslation, $enTranslation)
                     </ul>
                 </div>
             </nav>
-    </section>
+    </section> 
 
     <section class="content">
         <!-- container for adress input -->
