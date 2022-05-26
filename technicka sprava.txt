@@ -57,12 +57,16 @@ ROZDELENIE PRÁCE:
 Valábková:
     animácia,
     rozbehanie Octave na servere, API cez formulár (command line),
-    zabezpečenie API kľúčom
+    zabezpečenie API kľúčom,
+    funkčná štruktúra API ku CAS
 
 Polednák:
     dvojjazyčnosť,
     vykreslenie grafu,
-    logovanie príkazov do db
+    logovanie príkazov do db,
+    vylepšenia API ku CAS,
+    grafický layout, dizajn,
+    výpis implementovaných bodov ako dropbown menu
 
 Hančín:
     export logu z db do csv súboru, posielanie na mail,
