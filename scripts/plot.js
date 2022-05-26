@@ -26,7 +26,7 @@ sendBtn.addEventListener('click', () => {
                     let arrayY = (Object.values(result.y));
                     let arrayTime = (Object.values(result.t));
                     let arrayY2 = (Object.values(result.x1));
-                    createPlot(arrayTime, arrayY, result.c, arrayY2);
+                    createPlot(arrayTime, arrayY, result.c, arrayY2, result.lang);
 
                     warn.classList.add('hidden');
                     plotCanvas.classList.remove('hidden');
@@ -38,7 +38,7 @@ sendBtn.addEventListener('click', () => {
     }
 });
 
-const createPlot = (x, y, c, y2) => {
+const createPlot = (x, y, c, y2, lang) => {
     let dataX = [x[2]];
     let dataY = [y[2]];
     let dataY2 = [y2[2]];
@@ -46,7 +46,7 @@ const createPlot = (x, y, c, y2) => {
     let trace1 = {
         x: dataX,
         y: dataY,
-        name: 'Car',
+        name: returnTranslation(lang, "Auto", "Car"),
         mode: 'lines',
         type: 'scatter',
         line: {
@@ -57,7 +57,7 @@ const createPlot = (x, y, c, y2) => {
     let trace2 = {
         x: dataX,
         y: dataY2,
-        name: 'Wheel',
+        name: returnTranslation(lang, "Koleso", "Wheel"),
         mode: 'lines',
         type: 'scatter',
         line: {
@@ -66,7 +66,7 @@ const createPlot = (x, y, c, y2) => {
     };
 
     let layout = {
-        title: 'Placeholder II',
+        title: returnTranslation(lang, "Graf", "Plot"),
         showlegend: true,
         xaxis: {
             range: [-0.5, 5.5],
@@ -99,4 +99,8 @@ const createPlot = (x, y, c, y2) => {
         Plotly.redraw(plotCanvas, [trace1, trace2], layout, config);
 
     }, c);
+}
+
+const returnTranslation = (lang, skTrans, enTrans) => {
+    return (lang == 'sk') ? skTrans : enTrans;
 }
