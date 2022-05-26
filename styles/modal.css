@@ -25,7 +25,7 @@ padding: 4px;
 border: 1px solid #888;
 width: 65%;
 }
-#modaldata{
+.modaldata{
     padding: 35px;
 }
 .close{

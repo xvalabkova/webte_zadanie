@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,7 +44,7 @@ if (isset($_POST['octave_command_btn'])) {
     $commandLineOutput = "";
 
     foreach ($commands as $command) {
-        $myfile = fopen("files/form_commands.m", "w") or die("Unable to open file!");
+        $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
         $txt = "";
 
         if ($command != "") {
@@ -51,44 +52,109 @@ if (isset($_POST['octave_command_btn'])) {
             fwrite($myfile, $txt);
             fclose($myfile);
 
-            $cmd = "octave -qf files/form_commands.m";
-
-            $output = null;
-            $retval = null;
-            exec($cmd . ' 2>&1', $output, $retval);
-
-            $commandLineOutput = $commandLineOutput . (implode($output)) . "\n";
-            
-            try {
-                $test = new Command($myPdo);
-                $test->setCommand($command);
-                $test->setExitCode($retval);
-                $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
-                $test->setTimestamp(date("H:i:s  d.m.Y"));
-                $test->save();
-            } catch (PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
-        }
+            $cmd = "octave -qf form_commands.m";
+        }}}
+    if(isset($_POST['sendKey'])){
+        $arr_cookie_options = array (
+            'expires' => time() + 60*60*24*10,
+            'path' => '/',
+           // 'domain' => '.example.com', // leading dot for compatibility or use subdomain
+            'secure' => true,     // or false
+            //'httponly' => true,    // or false
+            'samesite' => 'None' // None || Lax  || Strict
+            );
+        if($apiKeyForOctaveAPI==$_POST['key_value']){
+            setcookie('ValidUser', 'true', $arr_cookie_options);  // 10 days cookies
+            $_COOKIE['ValidUser']="true";                                               // set manually, so it works without refreshing the page
+        }       // else??   
     }
-}
-?>
 
-<?php
-function langSwitch($skTranslation, $enTranslation)
-{
-    if ($_SESSION['lang'] == 'sk')
-        echo $skTranslation;
-    else if ($_SESSION['lang'] == 'en')
+// <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+    if(isset($_POST['octave_command_btn']) && isset($_COOKIE['ValidUser']) && $_COOKIE["ValidUser"]=="true"){        // if button for sending commands from command line was clicked
+        $command = strip_tags($_POST['oc_command']);
+        $command = str_replace(array("\n", "\r"), '', $command);
+        $commands = explode(";",$command);          // seperate multiple commands
+        $commandLineOutput = "";
+
+        $cmd = "octave -qf form_commands.m";
+        $overall_retval = 0;
+        $variables = [];
+
+        foreach($commands as $command) {
+            while ($command[0] == "\n" || $command[0] == " ") {
+                $command = substr($command, 1);
+            }
+            $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
+            $txt = "";
+            
+            if ($command != "") {
+                if (!strpos($command, '=') || strpos($command, '=') == strlen($command)-1) {
+                    $txt = $txt."printf(\"$command = %d\\n\", ".$command .");\n";
+                } else {
+                    $txt = $txt.$command.";\n";
+                    array_push($variables, $command[0]);
+                }      // prepare command to be executed by octave // expected output from octave: "1+1=2 \n"
+                fwrite($myfile, $txt);                                          // send command to file, that will be executed
+                fclose($myfile);
+                
+                $full_txt = $full_txt.$txt;
+
+                $output=null;
+                $retval=null;
+                exec($cmd.' 2>&1', $output, $retval);
+                
+                if ($retval != 0) {
+                    if (strpos($command, '=') && !in_array($command[0], $variables)) {
+                        $overall_retval = implode("\n", $output);
+                    } else $retval = 0;
+                }    
+
+                // <!-- -------------------------------------------------------------------- -->
+                // log to databaze, $myPdo is from file config.php 
+
+                try {             
+                    $test = new Command($myPdo);
+                    $test->setCommand($command);
+                    $test->setExitCode($retval);
+                    $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
+                    $test->setTimestamp(date("H:i:s  d.m.Y"));
+                    $test->save(); 
+                } catch(PDOException $e) {
+                    echo "Error: ". $e->getMessage();
+                }
+            }
+        } 
+        
+        if ($overall_retval == 0) {
+            $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
+            fwrite($myfile, $full_txt);
+            fclose($myfile);
+            $output = null;
+            exec($cmd.' 2>&1', $output, $retval);
+            $commandLineOutput = implode("\n", $output);
+        } else {
+            $commandLineOutput = $overall_retval;
+        }     // may contain return values for multiple commands
+    }
+    
+?>
+ <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+
+<?php 
+function langSwitch($skTranslation, $enTranslation) {       // function decides which value to print out based on the currently set language 
+    if ($_SESSION['lang'] == 'sk') 
+        echo $skTranslation; 
+    else if ($_SESSION['lang'] == 'en') 
         echo $enTranslation;
 }
 ?>
 
 <body>
     <section id="title">
-        <div class="container-fluid">
-
-            <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg navbar-dark">
                 <a class="navbar-brand" href=""><?php langSwitch('Octave... dočasné meno', 'Octave... placeholder name'); ?></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -117,20 +183,52 @@ function langSwitch($skTranslation, $enTranslation)
                     </ul>
                 </div>
             </nav>
-    </section> 
+            </div>
+        </section> 
+
+
+     <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
 
     <section class="content">
-        <!-- container for adress input -->
+
         <div class="container">
 
             <div class="row justify-content-center">
-                <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page'); ?></h3>
+                <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page');?></h3>
+
+
+                <!-- Api key form container, not working -->
+                <div class= container>
+                
+                <section>
+                    <!-- don't show this div if user is already valid -->
+                        <div class="container  <?php if(isset($_COOKIE['ValidUser']) && $_COOKIE['ValidUser']=='true') echo ' hidden'; else echo '';   ?>" >
+                            <h5 style="margin: 0 auto 1rem;"><?php langSwitch('Zadaj API kľúč', 'Write API key:');?></h5>
+                        <form action="index.php" method="post" >
+                                <div class="input-group">
+                                        <input type="text" class="form-control" id="api_k" name="key_value">
+                                        <div class="input-group-append">
+                                            <button type="submit" id="sendKey" name="sendKey" class="btn btn-dark"><?php langSwitch('Skontroluj:', 'Chceck:');?></button>
+                                    </div>
+                                </div>
+                               
+                            </form>
+                        </div>
+                </section>
+                </div>
+
+                
+
                 <!-- container for parameters -->
                 <div class="container">
                     <br>
                     <div class="row">
-                        <h5 style="margin: 0 auto 1rem;"><?php langSwitch('Zvoľ paramatre', 'Fill in parameters:'); ?></h5>
+                        <h5 style="margin: 0 auto 1rem;"><?php langSwitch('Zvoľ paramatre', 'Fill in parameters:');?></h5>
+
+                        <!-- Form for weight of objects and height of obstacle -->
                         <form action="index.php" method="post" id="param-form" class="form-group">
+                            
                             <div class="one-to-one-grid">
                                 <div class="form-group row">
                                     <label for="weight1" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 1:', 'Weight 1:'); ?></label>
@@ -156,6 +254,7 @@ function langSwitch($skTranslation, $enTranslation)
                                     <label for="height" class="col-sm-2 col-form-label"><?php langSwitch('Výška prekážky:', 'Obstacle height:'); ?></label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="height" name="r" placeholder="cm">
+                                        <small id="r_warning" class="">*must be smaller than 60cm</small>
                                     </div>
                                 </div>
 
@@ -164,12 +263,16 @@ function langSwitch($skTranslation, $enTranslation)
                                 </div>
                             </div>
 
-                            <button type="button" id="sendBtn" name="sendBtn" class="btn btn-dark"><?php langSwitch('Spusti:', 'Start:'); ?></button><br><br>
+                            <p class="hidden" id="warning-message" style="font-size: 1.2rem; color:red"></p>
+                            <button type="button" id="sendBtn" name="sendBtn" class="btn btn-dark"><?php langSwitch('Spusti:', 'Start:');?></button><br><br>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+    <!-- Divs preparvases -->
 
         <div class="canvases" style="margin-bottom: 1rem;">
             <section>
@@ -185,12 +288,16 @@ function langSwitch($skTranslation, $enTranslation)
             </section>
         </div>
 
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+    <!-- Command line input -->
+
         <section>
             <!-- command line  -->
             <div class="container border">
                 <br>
                 <h5><?php langSwitch('Príkazový riadok pre Octave:', 'Test command line for Octave:'); ?></h5>
 
+                <!-- Form sends command to a function to be executed, then prints output -->
                 <form action="index.php" method="post" class="form-group">
                     <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if (isset($_POST['octave_command_btn'])) {
                                                                                                                 echo $commandLineOutput;
@@ -251,6 +358,7 @@ function langSwitch($skTranslation, $enTranslation)
             </div>
         </div>
     </div>
+
     <?php
     if (isset($_GET['sent']) && $_GET['sent'] == "1") {
         echo '<script type="text/javascript">
@@ -258,6 +366,27 @@ function langSwitch($skTranslation, $enTranslation)
     </script>';
     }
     ?>
+
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+    <script>
+         function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+    </script>
+
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -272,6 +401,12 @@ function langSwitch($skTranslation, $enTranslation)
 
     <link href="styles/modal.css" rel="stylesheet">
 
+
+    <!-- p5.js library for animation -->
+    <script src="scripts/p5.js"></script>
+
+    <!-- My script, for animation -->
+    <script src="scripts/sketch.js"></script>
 </body>
 
 </html>

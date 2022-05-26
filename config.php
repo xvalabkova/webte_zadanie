@@ -3,7 +3,9 @@ require_once "classes/MyPDO.php";
 //email, on which are going to be sent logs in .cvs file.
 $email='frantisekbazos@gmail.com';
 // <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
+/*ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);*/
 $servername = "localhost";
 $dbname = "zaver";
 $username = "xhancin";
@@ -20,9 +22,6 @@ $password = "xNT6Mf0aXZagQFw";
 $simulation_coeficient = 70;
 
 $myPdo = new MyPDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 // <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
 $apiKeyForOctaveAPI="you_have_to_write_this";

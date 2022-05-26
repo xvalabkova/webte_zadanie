@@ -12,10 +12,13 @@ const animationCanvas = document.querySelector('#animation-canvas');
 const plotCheck = document.querySelector('#plot');
 const animationCheck = document.querySelector('#animation');
 const sendBtn = document.querySelector('#sendBtn');
+const warn = document.querySelector('#warning-message');
+let height = null;
 
 sendBtn.addEventListener('click', () => {
     if (plotCheck.checked) {
         const data = new FormData(document.querySelector('#param-form'));
+        height = Math.abs(data.get('r') * 2);
         fetch("services/getPlotData.php", {
                 method: "POST",
                 body: JSON.stringify({
@@ -29,23 +32,28 @@ sendBtn.addEventListener('click', () => {
                 if (result.y != "Error transpired") {
                     let arrayY = (Object.values(result.y));
                     let arrayTime = (Object.values(result.t));
-                    createPlot(arrayTime, arrayY, result.c);
+                    let arrayY2 = (Object.values(result.x1));
+                    createPlot(arrayTime, arrayY, result.c, arrayY2, result.lang);
 
+                    warn.classList.add('hidden');
                     plotCanvas.classList.remove('hidden');
+                } else {
+                    warn.classList.remove('hidden');
+                    warn.innerHTML = (result.lang == 'sk') ? "Chyba pri kalkulovaní hodnôt" : "Error occurred during the calculation of values";
                 }
-                //else
             })
     }
 });
 
-const createPlot = (x, y, c) => {
+const createPlot = (x, y, c, y2, lang) => {
     let dataX = [x[2]];
     let dataY = [y[2]];
+    let dataY2 = [y2[2]];
 
     let trace1 = {
         x: dataX,
         y: dataY,
-        name: 'Placeholder',
+        name: returnTranslation(lang, "Auto", "Car"),
         mode: 'lines',
         type: 'scatter',
         line: {
@@ -53,15 +61,26 @@ const createPlot = (x, y, c) => {
         }
     };
 
+    let trace2 = {
+        x: dataX,
+        y: dataY2,
+        name: returnTranslation(lang, "Koleso", "Wheel"),
+        mode: 'lines',
+        type: 'scatter',
+        line: {
+            color: '#151243'
+        }
+    };
+
     let layout = {
-        title: 'Placeholder II',
+        title: returnTranslation(lang, "Graf", "Plot"),
         showlegend: true,
         xaxis: {
             range: [-0.5, 5.5],
             title: 'X'
         },
         yaxis: {
-            range: [-6, 6],
+            range: [-height, height],
             title: 'Y',
         },
     }
@@ -73,17 +92,22 @@ const createPlot = (x, y, c) => {
         doubleClickDelay: 1000,
     }
 
-    Plotly.newPlot(plotCanvas, [trace1], layout, config);
+    Plotly.newPlot(plotCanvas, [trace1, trace2], layout, config);
 
     let i = 3;
     let interval = setInterval(() => {
-        if (!x[i] || !y[i]) {
+        if (!x[i] || !y[i] || !y2[i]) {
             clearInterval(interval);
         }
         dataX.push(x[i++]);
         dataY.push(y[i++]);
+        dataY2.push(y2[i++]);
 
-        Plotly.redraw(plotCanvas, [trace1], layout, config);
+        Plotly.redraw(plotCanvas, [trace1, trace2], layout, config);
 
     }, c);
+}
+
+const returnTranslation = (lang, skTrans, enTrans) => {
+    return (lang == 'sk') ? skTrans : enTrans;
 }

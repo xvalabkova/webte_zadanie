@@ -16,7 +16,7 @@
 
     //Source of code: https://www.w3docs.com/snippets/php/automatic-download-file.html
 
-    $filename = '../files/logs.csv';
+    $filename = '../logs.csv';
     $f = fopen($filename, 'w');
     if ($f === false) {
         die('Error opening the file ' . $filename);
