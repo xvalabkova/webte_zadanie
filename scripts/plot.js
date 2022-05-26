@@ -53,7 +53,7 @@
      let trace1 = {
          x: dataX,
          y: dataY,
-         name: returnTranslation(lang, "Koleso", "Wheel"),
+         name: returnTranslation(lang, "Auto", "Car"),
          mode: 'lines',
          type: 'scatter',
          line: {
@@ -64,7 +64,7 @@
      let trace2 = {
          x: dataX,
          y: dataY2,
-         name: returnTranslation(lang, "Auto", "Car"),
+         name: returnTranslation(lang, "Koleso", "Wheel"),
          mode: 'lines',
          type: 'scatter',
          line: {
