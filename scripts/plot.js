@@ -21,14 +21,14 @@ sendBtn.addEventListener('click', () => {
             .then(result => {
                 let arrayY = (Object.values(result.y));
                 let arrayTime = (Object.values(result.t));
-                createPlot(arrayTime, arrayY);
+                createPlot(arrayTime, arrayY, result.c);
 
                 plotCanvas.classList.remove('hidden');
             })
     }
 });
 
-const createPlot = (x, y) => {
+const createPlot = (x, y, c) => {
     let dataX = [x[2]];
     let dataY = [y[2]];
 
@@ -75,5 +75,5 @@ const createPlot = (x, y) => {
 
         Plotly.redraw(plotCanvas, [trace1], layout, config);
 
-    }, 60);
+    }, c);
 }
