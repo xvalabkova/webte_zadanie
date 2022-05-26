@@ -186,7 +186,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
         </div> 
 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
-    <!-- Divs prepared for canvases -->
+    <!-- Divs preparvases -->
 
         <div class="canvases" style="margin-bottom: 1rem;">
             <section>
