@@ -13,5 +13,7 @@ $password = "hesloheslo";
 // $password = "ZAoSKBBUksTuJ8Q";
 // <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
+$simulation_coeficient = 70;
+
 $myPdo = new MyPDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 ?>
