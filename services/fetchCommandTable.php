@@ -1,6 +1,8 @@
-
-
     <?php
+
+    if(!isset($_COOKIE['ValidUser']) || $_COOKIE['ValidUser']!="true")
+    die ("Not verefied user");
+
     ob_start();
 
     use PHPMailer\PHPMailer\PHPMailer;
@@ -78,7 +80,7 @@
             //$mail->addBCC('bcc@example.com');
 
             //Attachments
-            $mail->addAttachment('../files/logs.csv');         //Add attachments
+            $mail->addAttachment('../logs.csv');         //Add attachments
             //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
             //Content
