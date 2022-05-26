@@ -56,7 +56,8 @@ ROZDELENIE PRÁCE:
 
 Valábková:
     animácia,
-    rozbehanie Octave na servere, API cez formulár (command line)
+    rozbehanie Octave na servere, API cez formulár (command line),
+    zabezpečenie API kľúčom
 
 Polednák:
     dvojjazyčnosť,
@@ -70,7 +71,6 @@ Hančín:
 Spoločne: 
 
 Vôbec:
-    zabezpečenie API kľúčom,
     synchrónne sledovanie experimentovania,
     docer balíček
 

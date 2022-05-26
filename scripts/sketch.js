@@ -1,3 +1,10 @@
+//----------------------------------------------------------------------------
+// not working without api key
+if(getCookie("ValidUser")!="true")
+throw new Error("User not verefied");
+
+//----------------------------------------------------------------------------
+
 const proportion=0.5; 
 var data;
 var m1_arrayY;
@@ -95,7 +102,7 @@ sendBtn.onclick= function(){
                 pit_start_x=pit_start_x-move;     // move ground, object stays on place
 
                 // restart animation:
-                if(pit_start_x<-100){
+                if(pit_start_x<-100 && index>499){
                     pit_start_x=80;
                 
                     wheel_y=line_y;

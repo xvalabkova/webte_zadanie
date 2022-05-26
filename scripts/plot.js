@@ -1,3 +1,10 @@
+ //----------------------------------------------------------------------------
+// not working withou API key
+ if(getCookie("ValidUser")!="true")
+  throw new Error("my error message");
+
+  //----------------------------------------------------------------------------
+
 'use strict';
 
 const plotCanvas = document.querySelector('#plot-canvas');
