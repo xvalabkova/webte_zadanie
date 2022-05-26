@@ -349,7 +349,8 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                 <div id="htmldata">
                     <h3><?php langSwitch('Podis stránky', 'Site description'); ?></h3>
                     <p><?php langSwitch(
-                            'Táto stránka poskytuje API pre program Octave formou príkazového riadku,
+                            'Pred používaním funkcií stránky je nutné sa autorizovať cez API kľúč.
+                            Stránka poskytuje API pre program Octave formou príkazového riadku,
             kde po odoslaní príkazu príde odpoveď aj s výsledkom operácie. Ďalšou funkciou je 
             animácia dynamického systému "tlmič automobil", vrátane grafu zobrazujúceho priebeh, kde používateľ zadá parametre "Hmotnosť 1","Hmotnosť 2" a 
             "výška", v checkboxoch si zvolí či chce zobraziť graf alebo aj animáciu tlmiča a spustí. Ak necháte parametre prázdne a 
@@ -357,7 +358,8 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
             Po kliknutí "Stiahnite logy" sa stiahne súbor logs.csv obsahujúci logy z databázy. Po kliknutí "Pošli logy na mail" 
             sa odošle mail na adresu zo súboru config.php so súborom logs.csv v prílohe mailu.',
 
-                            'This site contains API with Octave comand line, where you put your comand and API server sends you result with
+                            'Before using site functions is necessary to authenticate with API key, listed in file config.php.
+                            This site contains API with Octave comand line, where you put your comand and API server sends you result with
             output. The next function, this site provides, is animation of dynamic system "Car shock absorber"
             , which contains drawing a graph of process and animation of shock absorber. Visitor of the site fills
             the paramethers "Weight 1", "Weight 2" and "Obstacle height", then selects the mode in checkboxes(drawing graph, animation)
@@ -426,7 +428,6 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
 
 
     <!-- p5.js library for animation -->
-    <!-- <script src="scripts/p5.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
 
     <!-- My script, for animation -->
