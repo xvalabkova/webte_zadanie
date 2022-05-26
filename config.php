@@ -11,7 +11,9 @@ $password = "hesloheslo";
 // $dbname = "zaver";
 // $username = "xpolednakp";
 // $password = "ZAoSKBBUksTuJ8Q";
-// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 
 $myPdo = new MyPDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+// <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+$apiKeyForOctaveAPI="you_have_to_write_this";
 ?>

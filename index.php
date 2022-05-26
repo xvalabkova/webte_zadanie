@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,9 +35,24 @@
         $_SESSION['lang'] = 'sk';
     }
 
+    if(isset($_POST['sendKey'])){
+        $arr_cookie_options = array (
+            'expires' => time() + 60*60*24*10,
+            'path' => '/',
+           // 'domain' => '.example.com', // leading dot for compatibility or use subdomain
+            'secure' => true,     // or false
+            //'httponly' => true,    // or false
+            'samesite' => 'None' // None || Lax  || Strict
+            );
+        if($apiKeyForOctaveAPI==$_POST['key_value']){
+            setcookie('ValidUser', 'true', $arr_cookie_options);  // 10 days cookies
+            $_COOKIE['ValidUser']="true";                                               // set manually, so it works without refreshing the page
+        }       // else??   
+    }
+
 // <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
-    if(isset($_POST['octave_command_btn'])){        // if button for sending commands from command line was clicked
+    if(isset($_POST['octave_command_btn']) && isset($_COOKIE['ValidUser']) && $_COOKIE["ValidUser"]=="true"){        // if button for sending commands from command line was clicked
         $command = strip_tags($_POST['oc_command']);
         $command = str_replace(array("\n", "\r"), '', $command);
         $commands = explode(";",$command);          // seperate multiple commands
@@ -74,10 +90,10 @@
                     echo "Error: ". $e->getMessage();
                 }
             }
-        } 
+        }
     }
+    
 ?>
-
  <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
 
@@ -131,11 +147,35 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
 
 
     <section class="content">
+
         <div class="container">
         
             <div class="row justify-content-center">
                 <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page');?></h3>
+
+
+                <!-- Api key form container, not working -->
+                <div class= container>
                 
+                <section>
+                    <!-- don't show this div if user is already valid -->
+                        <div class="container  <?php if(isset($_COOKIE['ValidUser']) && $_COOKIE['ValidUser']=='true') echo ' hidden'; else echo '';   ?>" >
+                            <h5 style="margin: 0 auto 1rem;"><?php langSwitch('Zadaj API kľúč', 'Write API key:');?></h5>
+                        <form action="index.php" method="post" >
+                                <div class="input-group">
+                                        <input type="text" class="form-control" id="api_k" name="key_value">
+                                        <div class="input-group-append">
+                                            <button type="submit" id="sendKey" name="sendKey" class="btn btn-dark"><?php langSwitch('Skontroluj:', 'Chceck:');?></button>
+                                    </div>
+                                </div>
+                               
+                            </form>
+                        </div>
+                </section>
+                </div>
+
+                
+
                 <!-- container for parameters -->
                 <div class="container">
                     <br>
@@ -170,6 +210,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                                     <label for="height" class="col-sm-2 col-form-label"><?php langSwitch('Výška prekážky:', 'Obstacle height:');?></label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="height" name="r" placeholder="cm">
+                                        <small id="r_warning" class="">*must be smaller than 60cm</small>
                                     </div>
                                 </div>
 
@@ -236,6 +277,23 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
+    <script>
+         function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+    </script>
 
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
