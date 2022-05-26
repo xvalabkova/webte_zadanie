@@ -351,7 +351,8 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
     <script src="scripts/plot.js" defer></script>
 
     <!-- p5.js library for animation -->
-    <script src="scripts/p5.js"></script>
+    <!-- <script src="scripts/p5.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
 
     <!-- My script, for animation -->
     <script src="scripts/sketch.js"></script>
