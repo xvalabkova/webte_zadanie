@@ -3,11 +3,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="xvalabkova, xpolednakp, xhancin">
-    <meta name="description" content="Computer Aided System - Octave">
-    
+    <meta name="description" content="Computer Aided System - Oracle">
+
     <title>Webte2 Záverečné zadanie</title>
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
@@ -22,19 +22,38 @@
 
     <!-- Custom styles -->
     <link rel="stylesheet" href="styles/myStyles.css">
-</head> 
+
+</head>
 
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
 <?php
-    require_once "config.php";
-    require_once "classes/Command.php";
+require_once "config.php";
+require_once "classes/Command.php";
 
-    session_start();
-    if (!isset($_SESSION['lang'])) {
-        $_SESSION['lang'] = 'sk';
-    }
+session_start();
+if (!isset($_SESSION['lang'])) {
+    $_SESSION['lang'] = 'sk';
+}
 
+
+if (isset($_POST['octave_command_btn'])) {
+    $command = strip_tags($_POST['oc_command']);
+    $command = str_replace(array("\n", "\r"), '', $command);
+    $commands = explode(";", $command);
+    $commandLineOutput = "";
+
+    foreach ($commands as $command) {
+        $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
+        $txt = "";
+
+        if ($command != "") {
+            $txt = $txt . "disp(\"$command=\"),disp(" . $command . ");\n";
+            fwrite($myfile, $txt);
+            fclose($myfile);
+
+            $cmd = "octave -qf form_commands.m";
+        }}}
     if(isset($_POST['sendKey'])){
         $arr_cookie_options = array (
             'expires' => time() + 60*60*24*10,
@@ -129,14 +148,13 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
         echo $skTranslation; 
     else if ($_SESSION['lang'] == 'en') 
         echo $enTranslation;
-} 
+}
 ?>
 
- <!-- ---------------------------------------------------------------------------------------------------------------- -->
-<!-- Navbar -->
-
-<body>  
+<body>
     <section id="title">
+            
+                
         <div class="container-fluid">
 
         <nav class="navbar navbar-expand-lg navbar-dark">
@@ -173,17 +191,20 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                             <li><a class="dropdown-item" href="services/switchLanguage.php">English <?php if ($_SESSION['lang'] == 'en') echo '<i class="fas lvl fa-check-circle"></i>'?></a></li>
                         </ul>
                     </li>
+                  
+                   
                     <li class="nav-item">
-                        <a id="placeholder2" class="nav-link" href="index.php"><?php langSwitch('Predpoveď počasia', 'Weather forecast');?></a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="placeholder3" class="nav-link" href="index.php"><?php langSwitch('Štatistika', 'Statistics');?></a>
-                    </li>
+                            <a id="placeholder2" class="nav-link"><?php langSwitch('Popis stránky', 'Site description'); ?></a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="placeholder3" class="nav-link" href="services/fetchCommandTable.php?mode=down"><?php langSwitch('Stiahnite logy', 'Download logs'); ?></a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="placeholder4" class="nav-link" href="services/fetchCommandTable.php?mode=mail"><?php langSwitch('Poši logy na mail', 'Send logs to mail'); ?></a>
+                        </li>
                 </ul>
             </div>
-        </nav>
-        </div>
-    </section>
+        </section> 
 
 
      <!-- ---------------------------------------------------------------------------------------------------------------- -->
@@ -192,7 +213,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
     <section class="content">
 
         <div class="container">
-        
+
             <div class="row justify-content-center">
                 <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page');?></h3>
 
@@ -230,7 +251,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                             
                             <div class="one-to-one-grid">
                                 <div class="form-group row">
-                                    <label for="weight1" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 1:', 'Weight 1:');?></label>
+                                    <label for="weight1" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 1:', 'Weight 1:'); ?></label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="weight1" name="m1" placeholder="kg">
                                     </div>
@@ -239,18 +260,18 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                                 <br>
 
                                 <div class="form-group row">
-                                    <label for="weight2" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 2:', 'Weight 2:');?></label>
+                                    <label for="weight2" class="col-sm-2 col-form-label"><?php langSwitch('Hmotnosť 2:', 'Weight 2:'); ?></label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="weight2" name="m2" placeholder="kg">
                                     </div>
                                 </div>
 
                                 <div class="form-check">
-                                    <label class="form-check-label"><?php langSwitch('Animácia:', 'Animation:');?><input class="form-check-input" type="checkbox" name="animation" id="animation"></label>
+                                    <label class="form-check-label"><?php langSwitch('Animácia:', 'Animation:'); ?><input class="form-check-input" type="checkbox" name="animation" id="animation"></label>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="height" class="col-sm-2 col-form-label"><?php langSwitch('Výška prekážky:', 'Obstacle height:');?></label>
+                                    <label for="height" class="col-sm-2 col-form-label"><?php langSwitch('Výška prekážky:', 'Obstacle height:'); ?></label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="height" name="r" placeholder="cm">
                                         <small id="r_warning" class="">*must be smaller than 60cm</small>
@@ -258,7 +279,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                                 </div>
 
                                 <div class="form-check">
-                                    <label class="form-check-label"><?php langSwitch('Graf:', 'Plot:');?><input class="form-check-input" type="checkbox" name="plot" id="plot"></label>
+                                    <label class="form-check-label"><?php langSwitch('Graf:', 'Plot:'); ?><input class="form-check-input" type="checkbox" name="plot" id="plot"></label>
                                 </div>
                             </div>
 
@@ -266,9 +287,9 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                             <button type="button" id="sendBtn" name="sendBtn" class="btn btn-dark"><?php langSwitch('Spusti:', 'Start:');?></button><br><br>
                         </form>
                     </div>
-                </div> 
+                </div>
             </div>
-        </div> 
+        </div>
 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
     <!-- Divs preparvases -->
@@ -294,30 +315,77 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
             <!-- command line  -->
             <div class="container border">
                 <br>
-                <h5><?php langSwitch('Príkazový riadok pre Octave:', 'Test command line for Octave:');?></h5>
+                <h5><?php langSwitch('Príkazový riadok pre Octave:', 'Test command line for Octave:'); ?></h5>
 
                 <!-- Form sends command to a function to be executed, then prints output -->
                 <form action="index.php" method="post" class="form-group">
-                <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if(isset($_POST['octave_command_btn'])){ echo $commandLineOutput; }?></textarea>
-                <div class="input-group">
+                    <textarea id="output" name="out_oc" class="form-control" style="height:110px;" readonly><?php if (isset($_POST['octave_command_btn'])) {
+                                                                                                                echo $commandLineOutput;
+                                                                                                            } ?></textarea>
+                    <div class="input-group">
 
-                    <textarea id="command" name="oc_command" class="form-control" style="height:18px;"></textarea>
+                        <textarea id="command" name="oc_command" class="form-control" style="height:18px;"></textarea>
 
-                    <div class="input-group-append">
+                        <div class="input-group-append">
 
-                    <button class="input-group-text btn btn-dark" name="octave_command_btn"><?php langSwitch('Pošli:', 'Send:');?></button>
+                            <button class="input-group-text btn btn-dark" name="octave_command_btn"><?php langSwitch('Pošli:', 'Send:'); ?></button>
 
+                        </div>
                     </div>
-                </div>
                 </form>
                 <br>
             </div>
         </section>
 
         <br><br>
-    
-    </section>
 
+    </section>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="close">&#10006;</div>
+            <div class="modaldata">
+                <div id="htmldata">
+                    <h3><?php langSwitch('Podis stránky', 'Site description'); ?></h3>
+                    <p><?php langSwitch(
+                            'Táto stránka poskytuje API pre program Octave formou príkazového riadku,
+            kde po odoslaní príkazu príde odpoveď aj s výsledkom operácie. Ďalšou funkciou je 
+            animácia dynamického systému "tlmič automobil", vrátane grafu zobrazujúceho priebeh, kde používateľ zadá parametre "Hmotnosť 1","Hmotnosť 2" a 
+            "výška", v checkboxoch si zvolí či chce zobraziť graf alebo aj animáciu tlmiča a spustí. Ak necháte parametre prázdne a 
+            spustíte dosadia sa východiskové parametre. V menu, po kliknutí "Výber jazyka" je možné dynamicky prepínať medzi SK/EN.
+            Po kliknutí "Stiahnite logy" sa stiahne súbor logs.csv obsahujúci logy z databázy. Po kliknutí "Pošli logy na mail" 
+            sa odošle mail na adresu zo súboru config.php so súborom logs.csv v prílohe mailu.',
+                            'This site contains API with Octave comand line, where you put your comand and API server sends you result with
+            output. The next function, this site provides, is animation of dynamic system "Car shock absorber"
+            , which contains drawing a graph of process and animation of shock absorber. Visitor of the site fills
+            the paramethers "Weight 1", "Weight 2" and "Obstacle height", then selects the mode in checkboxes(drawing graph, animation)
+            and starts. If you leave parameters empty, there will be setted default parameters. In menu "Language selection" can user dynamically change language between SK/EN.
+            In menu "Download logs" you can download database data in logs.csv file. In menu "Send logs to mail" you can send mail to address written in config.php file
+            with file logs.csv in attachment.'
+                        ); ?></p>
+                </div>
+                <form action="pdf.php" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="htmlData" id="htmlData" value="...">
+                    <input class="btn btn-dark" type="submit" value="<?php langSwitch('Generuj do pdf', 'Generate to pdf'); ?>" name="pdf">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <div class="close">&#10006;</div>
+            <div class="modaldata">
+                <h3 id="sentMail" class="text-success"><?php langSwitch('Logy boli zaslané na mail: '.$email, 'Logs have been sent to mail: '.$email); ?></h3>
+            </div>
+        </div>
+    </div>
+
+    <?php
+    if (isset($_GET['sent']) && $_GET['sent'] == "1") {
+        echo '<script type="text/javascript">
+    document.getElementById("modal2").style.display = "block";
+    </script>';
+    }
+    ?>
 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
 
@@ -341,14 +409,18 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
 
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
+
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <!-- Plotly -->
     <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
-   
+
     <script src="scripts/plot.js" defer></script>
+    <script src="scripts/main.js"></script>
+
+    <link href="styles/modal.css" rel="stylesheet">
+
 
     <!-- p5.js library for animation -->
     <!-- <script src="scripts/p5.js"></script> -->
@@ -357,4 +429,5 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
     <!-- My script, for animation -->
     <script src="scripts/sketch.js"></script>
 </body>
+
 </html>
