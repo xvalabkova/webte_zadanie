@@ -247,7 +247,7 @@ function langSwitch($skTranslation, $enTranslation)
         <div class="modal-content">
             <div class="close">&#10006;</div>
             <div class="modaldata">
-                <h3 id="sentMail" class="text-success"><?php langSwitch('Logy boli zaslané na mail', 'Logs have been sent to mail'); ?></h3>
+                <h3 id="sentMail" class="text-success"><?php langSwitch('Logy boli zaslané na mail: '.$email, 'Logs have been sent to mail: '.$email); ?></h3>
             </div>
         </div>
     </div>
