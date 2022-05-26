@@ -92,6 +92,7 @@ if ($overall_retval == 0) {
     $t=null;
     $y=null;
     $x1=null;
+    $x3=null;
     $retval=null;
     exec($cmd, $t, $retval);
 
@@ -105,7 +106,12 @@ if ($overall_retval == 0) {
     fclose($myfile);
     exec($cmd, $x1, $retval);
 
-    $result = ["y" => $y, "t" => $t, "x1" => $x1, "c" => $simulation_coeficient, "lang" => $lang];
+    $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
+    fwrite($myfile, $originalCode."x(:,3)");
+    fclose($myfile);
+    exec($cmd, $x3, $retval);
+
+    $result = ["y" => $y, "t" => $t, "x1" => $x1, "x3" => $x3, "c" => $simulation_coeficient, "lang" => $lang];
     echo json_encode($result);
 } else {
     $result = ["y" => "Error transpired", "lang" => $lang];

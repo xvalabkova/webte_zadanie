@@ -153,25 +153,47 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
 
 <body>
     <section id="title">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg navbar-dark">
-                <a class="navbar-brand" href=""><?php langSwitch('Octave... dočasné meno', 'Octave... placeholder name'); ?></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            
+                
+        <div class="container-fluid">
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php langSwitch('Výber jazyka', 'Language selection'); ?>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="services/switchLanguage.php">Slovenčina <?php if ($_SESSION['lang'] == 'sk') echo '<i class="fas lvl fa-check-circle"></i>' ?></a></li>
-                                <li><a class="dropdown-item" href="services/switchLanguage.php">English <?php if ($_SESSION['lang'] == 'en') echo '<i class="fas lvl fa-check-circle"></i>' ?></a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <a class="navbar-brand" href=""><?php langSwitch('Octave... dočasné meno', 'Octave... placeholder name');?></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php langSwitch('Ciele zadania', 'Targets of the assignment');?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Dvojjazyčnosť', 'Bilingualist'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('API ku CAS s API kľúčom', 'API to CAS with an API key'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Animácia', 'Animation'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Graf', 'Plot'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('API formulár', 'API form'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Logovanie, export to CSV', 'Logging, export to CSV'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Export popisu do PDF', 'Export to PDF'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Synchrónne sledovanie', 'Synchronous viewing'); echo '   <i class="fas lvl fa-times-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Docker balíček', 'Docker'); echo '   <i class="fas lvl fa-times-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href=""><?php langSwitch('Používanie verziovacieho systému', 'Usage of version system'); echo '   <i class="fas lvl fa-check-circle"></i>'?></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php langSwitch('Výber jazyka', 'Language selection');?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="services/switchLanguage.php">Slovenčina <?php if ($_SESSION['lang'] == 'sk') echo '<i class="fas lvl fa-check-circle"></i>'?></a></li>
+                            <li><a class="dropdown-item" href="services/switchLanguage.php">English <?php if ($_SESSION['lang'] == 'en') echo '<i class="fas lvl fa-check-circle"></i>'?></a></li>
+                        </ul>
+                    </li>
+                  
+                   
+                    <li class="nav-item">
                             <a id="placeholder2" class="nav-link"><?php langSwitch('Popis stránky', 'Site description'); ?></a>
                         </li>
                         <li class="nav-item">
@@ -180,9 +202,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                         <li class="nav-item">
                             <a id="placeholder4" class="nav-link" href="services/fetchCommandTable.php?mode=mail"><?php langSwitch('Poši logy na mail', 'Send logs to mail'); ?></a>
                         </li>
-                    </ul>
-                </div>
-            </nav>
+                </ul>
             </div>
         </section> 
 

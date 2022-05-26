@@ -52,6 +52,16 @@ body {
     margin-bottom: 3rem;
 }
 
+.fa-times-circle {
+    color: red;
+    float: right;
+}
+
+.fa-check-circle {
+    color: green;
+    float: right;
+}
+
 .row {
     justify-content: left;
 }
