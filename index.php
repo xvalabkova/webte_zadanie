@@ -35,11 +35,7 @@ if (!isset($_SESSION['lang'])) {
     $_SESSION['lang'] = 'sk';
 }
 
-/*if(isset($_GET['sended']) && $_GET['sended']=="1" ){
-    echo'<script type="text/javascript">
-    document.getElementById("modal2").style.display = "block";
-    </script>';
-}*/
+
 if (isset($_POST['octave_command_btn'])) {
     $command = strip_tags($_POST['oc_command']);
     $command = str_replace(array("\n", "\r"), '', $command);
@@ -62,17 +58,17 @@ if (isset($_POST['octave_command_btn'])) {
             exec($cmd . ' 2>&1', $output, $retval);
 
             $commandLineOutput = $commandLineOutput . (implode($output)) . "\n";
-            //TODO data z konzoly
+            
             try {
-                    $test = new Command($myPdo);
-                    $test->setCommand($command);
-                    $test->setExitCode($retval);
-                    $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
-                    $test->setTimestamp(date("H:i:s  d.m.Y"));
-                    $test->save(); 
-                } catch(PDOException $e) {
-                    echo "Error: ". $e->getMessage();
-                }
+                $test = new Command($myPdo);
+                $test->setCommand($command);
+                $test->setExitCode($retval);
+                $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
+                $test->setTimestamp(date("H:i:s  d.m.Y"));
+                $test->save();
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
         }
     }
 }
@@ -220,20 +216,25 @@ function langSwitch($skTranslation, $enTranslation)
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="close">&#10006;</div>
-            <div id="modaldata">
+            <div class="modaldata">
                 <div id="htmldata">
                     <h3><?php langSwitch('Podis stránky', 'Site description'); ?></h3>
-                    <p><?php langSwitch('Táto stránka poskytuje API pre program Octave formou príkazového riadku,
+                    <p><?php langSwitch(
+                            'Táto stránka poskytuje API pre program Octave formou príkazového riadku,
             kde po odoslaní príkazu príde odpoveď aj s výsledkom operácie. Ďalšou funkciou je 
             animácia dynamického systému "tlmič automobil", vrátane grafu zobrazujúceho priebeh, kde používateľ zadá parametre "Hmotnosť 1","Hmotnosť 2" a 
             "výška", v checkboxoch si zvolí či chce zobraziť graf alebo aj animáciu tlmiča a spustí. Ak necháte parametre prázdne a 
-            spustíte dosadia sa východiskové parametre. V menu, v sekcií "Výber jazyka" je možné dynamicky prepínať medzi SK/EN.  '
-            , 
-            'This site contains API with Octave comand line, where you put your comand and API server sends you result with
-            output of the command. The next function, this site provides, is animation of dynamic system "Car shock absorber"
+            spustíte dosadia sa východiskové parametre. V menu, po kliknutí "Výber jazyka" je možné dynamicky prepínať medzi SK/EN.
+            Po kliknutí "Stiahnite logy" sa stiahne súbor logs.csv obsahujúci logy z databázy. Po kliknutí "Pošli logy na mail" 
+            sa odošle mail na adresu zo súboru config.php so súborom logs.csv v prílohe mailu.',
+                            'This site contains API with Octave comand line, where you put your comand and API server sends you result with
+            output. The next function, this site provides, is animation of dynamic system "Car shock absorber"
             , which contains drawing a graph of process and animation of shock absorber. Visitor of the site fills
             the paramethers "Weight 1", "Weight 2" and "Obstacle height", then selects the mode in checkboxes(drawing graph, animation)
-            and starts. If you leave parameters empty, there will be setted default parameters. In menu "Language selection" can user dynamically change language between SK/EN.'); ?></p>
+            and starts. If you leave parameters empty, there will be setted default parameters. In menu "Language selection" can user dynamically change language between SK/EN.
+            In menu "Download logs" you can download database data in logs.csv file. In menu "Send logs to mail" you can send mail to address written in config.php file
+            with file logs.csv in attachment.'
+                        ); ?></p>
                 </div>
                 <form action="pdf.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="htmlData" id="htmlData" value="...">
@@ -246,11 +247,17 @@ function langSwitch($skTranslation, $enTranslation)
         <div class="modal-content">
             <div class="close">&#10006;</div>
             <div class="modaldata">
-            <?php langSwitch('Logy boli zaslané na mail', 'Logs have been sended to mail'); ?>
+                <h3 id="sentMail" class="text-success"><?php langSwitch('Logy boli zaslané na mail', 'Logs have been sent to mail'); ?></h3>
             </div>
         </div>
     </div>
-
+    <?php
+    if (isset($_GET['sent']) && $_GET['sent'] == "1") {
+        echo '<script type="text/javascript">
+    document.getElementById("modal2").style.display = "block";
+    </script>';
+    }
+    ?>
     <!-- Bootstrap script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -262,7 +269,7 @@ function langSwitch($skTranslation, $enTranslation)
 
     <script src="scripts/plot.js" defer></script>
     <script src="scripts/main.js"></script>
-  
+
     <link href="styles/modal.css" rel="stylesheet">
 
 </body>

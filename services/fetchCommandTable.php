@@ -21,12 +21,13 @@
     if ($f === false) {
         die('Error opening the file ' . $filename);
     }
-
+//writes DB data to file logs.csv
     fputcsv($f, ['id', 'command', 'exit_code', 'error_message', 'timestamp'], ';');
     foreach ($data as $row) {
         fputcsv($f, $row, ';');
     }
     fclose($f);
+    //downloads the file from page
     if (isset($_GET['mode']) && $_GET['mode'] == "down") {
         if (file_exists($filename)) {
             header('Content-Description: File Transfer');
@@ -88,7 +89,7 @@
 
             $mail->send();
             echo 'Message has been sent';
-            header('location: ../index.php');
+            header('location: ../index.php?sent=1');
             //header('location: ../index.php?sended="1"');
             //header('Refresh: 3; URL=../index.php?sended=1');
         } catch (Exception $e) {

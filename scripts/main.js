@@ -13,7 +13,7 @@ document.getElementsByClassName("close")[1].onclick = function() {
   
   }
 window.onclick = function(event) {
-if (event.target == modal) {
+if (event.target == modal || event.target == modal2) {
 document.getElementById("modal").style.display = "none";
 document.getElementById("modal2").style.display = "none";
 }

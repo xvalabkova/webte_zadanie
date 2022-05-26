@@ -1,6 +1,6 @@
 <?php
 require_once "classes/MyPDO.php";
-//email, on which are going to be sended logs in .cvs file.
+//email, on which are going to be sent logs in .cvs file.
 $email='frantisekbazos@gmail.com';
 // <!-- ------------------------------------------------------------------------------------------------------------------------ -->
 

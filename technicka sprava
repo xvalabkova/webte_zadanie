@@ -31,6 +31,12 @@ v priecinku /home/x.../:
 sudo apt install php-tcpdf
 sudo service nginx restart
 
+PHPMailer(subory su na githube, malo by fungovat bez instalacie)
+Zo stránky:https://github.com/PHPMailer/PHPMailer
+v priecinku /var/www/siteXX.webte.fei.stuba.sk/webte-zadanie/mailSender:
+composer require phpmailer/phpmailer
+-použitý SMTP server:smtp.gmail.com, nastavený cez mail frantisekbazos@gmail.com (netreba menit/nastavovat)
+nastavované podľa videa:https://www.youtube.com/watch?v=ql5Dex4m40w&ab_channel=WorthRead
 
 BOOTSTRAP 
 CSS framework s ready-to-use triedami pre jednoduchú tvorbu vizuálne príjemným elementov a stránok
