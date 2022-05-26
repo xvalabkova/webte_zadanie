@@ -9,19 +9,24 @@ $overall_retval = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    // TODO: Sanity checks , if not overall_retval = -1
-    if (isset($data['m1']) && is_numeric($data['m1'])) 
-        $paramDeclaration = $paramDeclaration."m1 = ".$data['m1']."; ";
-    else $paramDeclaration = $paramDeclaration."m1 = 2500; ";
+    if (isset($data['m1']) && is_numeric($data['m1'])) {
+        if ($data['m1'] > 1000) {
+            $paramDeclaration = $paramDeclaration."m1 = ".$data['m1']."; ";
+        } else $overall_retval = -1;
+    }   else $paramDeclaration = $paramDeclaration."m1 = 2500; ";
 
-    if (isset($data['m2']) && is_numeric($data['m2'])) 
-        $paramDeclaration = $paramDeclaration."m2 = ".$data['m2']."; ";
-    else $paramDeclaration = $paramDeclaration."m2 = 320; ";
+    if (isset($data['m2']) && is_numeric($data['m2'])) {
+        if ($data['m2'] > 100) {
+            $paramDeclaration = $paramDeclaration."m2 = ".$data['m2']."; ";
+        } else $overall_retval = -1;
+    }   else $paramDeclaration = $paramDeclaration."m2 = 320; ";
 
-    if (isset($data['r']) && is_numeric($data['r'])) 
-        $paramDeclaration = $paramDeclaration."r = ".$data['r']."; ";
-    else $paramDeclaration = $paramDeclaration."r = 50; ";
-} else $paramDeclaration = "m1 = 2500; m2 = 320; r =50;";
+    if (isset($data['r']) && is_numeric($data['r'])) {
+        if($data['r'] < 61 && $data['r'] > -61) {
+            $paramDeclaration = $paramDeclaration."r = ".$data['r']."; ";
+        }   else $overall_retval = -1;
+    } else $paramDeclaration = $paramDeclaration."r = 0.1; ";
+} else $paramDeclaration = "m1 = 2500; m2 = 320; r =0.1;";
 
 $originalCode = "pkg load control; ".$paramDeclaration."
 
@@ -44,9 +49,18 @@ initX2d=0;
 [y,t,x]=lsim(sys*[0;1],r*ones(size(t)),t,[initX1;initX1d;initX2;initX2d;0]);
 ";
 
+$codeAddition = "r = -10;
+[y,t,x]=lsim(sys*[0;1],r*ones(size(t)),t,x(size(x,1),:));";
+
 $originalCode = strip_tags($originalCode);
 $originalCode = str_replace(array("\n", "\r"), '', $originalCode);
 $commands = explode(";",$originalCode);
+
+$lang;
+session_start();
+    if ($_SESSION['lang'] != 'en') {
+        $lang = 'sk';
+    } else $lang = 'en';
 
 foreach($commands as $command) {
     $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
@@ -77,6 +91,7 @@ if ($overall_retval == 0) {
 
     $t=null;
     $y=null;
+    $x1=null;
     $retval=null;
     exec($cmd, $t, $retval);
 
@@ -85,10 +100,15 @@ if ($overall_retval == 0) {
     fclose($myfile);
     exec($cmd, $y, $retval);
 
-    $result = ["y" => $y, "t" => $t, "c" => $simulation_coeficient];
+    $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
+    fwrite($myfile, $originalCode."x(:,1)");
+    fclose($myfile);
+    exec($cmd, $x1, $retval);
+
+    $result = ["y" => $y, "t" => $t, "x1" => $x1, "c" => $simulation_coeficient, "lang" => $lang];
     echo json_encode($result);
 } else {
-    $result = ["y" => "Error transpired"];
+    $result = ["y" => "Error transpired", "lang" => $lang];
     echo json_encode($result);
 }
 ?>

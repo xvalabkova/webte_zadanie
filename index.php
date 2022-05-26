@@ -204,6 +204,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                                 </div>
                             </div>
 
+                            <p class="hidden" id="warning-message" style="font-size: 1.2rem; color:red"></p>
                             <button type="button" id="sendBtn" name="sendBtn" class="btn btn-dark"><?php langSwitch('Spusti:', 'Start:');?></button><br><br>
                         </form>
                     </div>
