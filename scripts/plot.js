@@ -26,16 +26,19 @@ sendBtn.addEventListener('click', () => {
             })
             .then(response => response.json())
             .then(result => {
-                let arrayY = (Object.values(result.y));
-                let arrayTime = (Object.values(result.t));
-                createPlot(arrayTime, arrayY);
+                if (result.y != "Error transpired") {
+                    let arrayY = (Object.values(result.y));
+                    let arrayTime = (Object.values(result.t));
+                    createPlot(arrayTime, arrayY, result.c);
 
-                plotCanvas.classList.remove('hidden');
+                    plotCanvas.classList.remove('hidden');
+                }
+                //else
             })
     }
 });
 
-const createPlot = (x, y) => {
+const createPlot = (x, y, c) => {
     let dataX = [x[2]];
     let dataY = [y[2]];
 
@@ -82,5 +85,5 @@ const createPlot = (x, y) => {
 
         Plotly.redraw(plotCanvas, [trace1], layout, config);
 
-    }, 60);
+    }, c);
 }

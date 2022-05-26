@@ -1,11 +1,15 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
+require_once "../config.php";
+require_once "../classes/Command.php";
+
 $data;
 $paramDeclaration = "";
+$overall_retval = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    // TODO: Sanity checks
+    // TODO: Sanity checks , if not overall_retval = -1
     if (isset($data['m1']) && is_numeric($data['m1'])) 
         $paramDeclaration = $paramDeclaration."m1 = ".$data['m1']."; ";
     else $paramDeclaration = $paramDeclaration."m1 = 2500; ";
@@ -42,23 +46,49 @@ initX2d=0;
 
 $originalCode = strip_tags($originalCode);
 $originalCode = str_replace(array("\n", "\r"), '', $originalCode);
+$commands = explode(";",$originalCode);
 
-$myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
-fwrite($myfile, $originalCode."t");
-fclose($myfile);
+foreach($commands as $command) {
+    $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
+    fwrite($myfile, $command);
+    fclose($myfile);
+    exec($cmd.' 2>&1', $output, $retval);
+    if ($retval != 0) {
+        $overall_retval = implode("\n", $output);
+    } else if ($command != ""){
+        try {
+            $test = new Command($myPdo);
+            $test->setCommand($command);
+            $test->setExitCode($retval);
+            $retval == 0 ? $test->setErrorMessage() : $test->setErrorMessage(implode($output));
+            $test->setTimestamp(date("H:i:s  d.m.Y"));
+            $test->save(); 
+        } catch(PDOException $e) {
+            echo "Error: ". $e->getMessage();
+        }
+    }
+};
 
-$cmd = "octave -qf ../graph_code.m";
+if ($overall_retval == 0) {
+    $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
+    fwrite($myfile, $originalCode."t");
+    fclose($myfile); 
+    $cmd = "octave -qf ../graph_code.m";
 
-$t=null;
-$y=null;
-$retval=null;
-exec($cmd, $t, $retval);
+    $t=null;
+    $y=null;
+    $retval=null;
+    exec($cmd, $t, $retval);
 
-$myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
-fwrite($myfile, $originalCode."y");
-fclose($myfile);
-exec($cmd, $y, $retval);
+    $myfile = fopen("../graph_code.m", "w") or die("Unable to open file!");
+    fwrite($myfile, $originalCode."y");
+    fclose($myfile);
+    exec($cmd, $y, $retval);
 
-$result = ["y" => $y, "t" => $t];
-echo json_encode($result);
+    $result = ["y" => $y, "t" => $t, "c" => $simulation_coeficient];
+    echo json_encode($result);
+} else {
+    $result = ["y" => "Error transpired"];
+    echo json_encode($result);
+}
 ?>

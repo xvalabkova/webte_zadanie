@@ -58,23 +58,38 @@
         $commands = explode(";",$command);          // seperate multiple commands
         $commandLineOutput = "";
 
+        $cmd = "octave -qf form_commands.m";
+        $overall_retval = 0;
+        $variables = [];
+
         foreach($commands as $command) {
+            while ($command[0] == "\n" || $command[0] == " ") {
+                $command = substr($command, 1);
+            }
             $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
             $txt = "";
             
             if ($command != "") {
-                $txt = $txt."disp(\"$command=\"),disp(".$command .");\n";       // prepare command to be executed by octave // expected output from octave: "1+1=2 \n"
+                if (!strpos($command, '=') || strpos($command, '=') == strlen($command)-1) {
+                    $txt = $txt."printf(\"$command = %d\\n\", ".$command .");\n";
+                } else {
+                    $txt = $txt.$command.";\n";
+                    array_push($variables, $command[0]);
+                }      // prepare command to be executed by octave // expected output from octave: "1+1=2 \n"
                 fwrite($myfile, $txt);                                          // send command to file, that will be executed
                 fclose($myfile);
                 
-                $cmd = "octave -qf form_commands.m";
+                $full_txt = $full_txt.$txt;
 
                 $output=null;
                 $retval=null;
                 exec($cmd.' 2>&1', $output, $retval);
                 
-                $commandLineOutput = $commandLineOutput.(implode($output))."\n";    // may contain return values for multiple commands
-
+                if ($retval != 0) {
+                    if (strpos($command, '=') && !in_array($command[0], $variables)) {
+                        $overall_retval = implode("\n", $output);
+                    } else $retval = 0;
+                }    
 
                 // <!-- -------------------------------------------------------------------- -->
                 // log to databaze, $myPdo is from file config.php 
@@ -90,7 +105,18 @@
                     echo "Error: ". $e->getMessage();
                 }
             }
-        }
+        } 
+        
+        if ($overall_retval == 0) {
+            $myfile = fopen("form_commands.m", "w") or die("Unable to open file!");
+            fwrite($myfile, $full_txt);
+            fclose($myfile);
+            $output = null;
+            exec($cmd.' 2>&1', $output, $retval);
+            $commandLineOutput = implode("\n", $output);
+        } else {
+            $commandLineOutput = $overall_retval;
+        }     // may contain return values for multiple commands
     }
     
 ?>
@@ -227,7 +253,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
         </div> 
 
     <!-- ---------------------------------------------------------------------------------------------------------------- -->
-    <!-- Divs prepared for canvases -->
+    <!-- Divs preparvases -->
 
         <div class="canvases" style="margin-bottom: 1rem;">
             <section>
