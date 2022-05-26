@@ -20,7 +20,6 @@ sendBtn.onclick= function(){
   if (animationCheck.checked) {
     //Retrieve calculated values from octave
     data = new FormData(document.querySelector('#param-form'));
-    console.log(data.get('r'));
     fetch("services/getPlotData.php", {
             method: "POST",
             body: JSON.stringify({

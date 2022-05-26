@@ -200,7 +200,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                             <a id="placeholder3" class="nav-link" href="services/fetchCommandTable.php?mode=down"><?php langSwitch('Stiahnite logy', 'Download logs'); ?></a>
                         </li>
                         <li class="nav-item">
-                            <a id="placeholder4" class="nav-link" href="services/fetchCommandTable.php?mode=mail"><?php langSwitch('Poši logy na mail', 'Send logs to mail'); ?></a>
+                            <a id="placeholder4" class="nav-link" href="services/fetchCommandTable.php?mode=mail"><?php langSwitch('Pošli logy na mail', 'Send logs to mail'); ?></a>
                         </li>
                 </ul>
             </div>
@@ -218,7 +218,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
                 <h3 class="text-center" style="padding: 1rem auto 0;"><?php langSwitch('Úvodná stránka', 'Welcome page');?></h3>
 
 
-                <!-- Api key form container, not working -->
+                <!-- Api key form container-->
                 <div class= container>
                 
                 <section>
@@ -337,6 +337,8 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
             </div>
         </section>
 
+<!-- ---------------------------------------------------------------------------------------------------------------- -->
+<!-- API description -->
         <br><br>
 
     </section>
@@ -354,6 +356,7 @@ function langSwitch($skTranslation, $enTranslation) {       // function decides 
             spustíte dosadia sa východiskové parametre. V menu, po kliknutí "Výber jazyka" je možné dynamicky prepínať medzi SK/EN.
             Po kliknutí "Stiahnite logy" sa stiahne súbor logs.csv obsahujúci logy z databázy. Po kliknutí "Pošli logy na mail" 
             sa odošle mail na adresu zo súboru config.php so súborom logs.csv v prílohe mailu.',
+
                             'This site contains API with Octave comand line, where you put your comand and API server sends you result with
             output. The next function, this site provides, is animation of dynamic system "Car shock absorber"
             , which contains drawing a graph of process and animation of shock absorber. Visitor of the site fills
