@@ -18,8 +18,9 @@ sendBtn.onclick= function(){
   btnClicked=true; 
 
   if (animationCheck.checked) {
-    // Retrieve calculated values from octave
+    //Retrieve calculated values from octave
     data = new FormData(document.querySelector('#param-form'));
+    console.log(data.get('r'));
     fetch("services/getPlotData.php", {
             method: "POST",
             body: JSON.stringify({
@@ -30,9 +31,9 @@ sendBtn.onclick= function(){
         })
         .then(response => response.json())
         .then(result => {
-            
+          
              m1_arrayY = (Object.values(result.y));             
-
+            
             animationCanvas.classList.remove('hidden');
         })
 }
@@ -46,7 +47,7 @@ sendBtn.onclick= function(){
       r=data.get('r');  // parameter
 
     if(r=="")
-      r=50;
+      r=20;
 
     r=r*proportion;
     r_abs=Math.abs(r);
@@ -57,20 +58,24 @@ sendBtn.onclick= function(){
     height1_start=height1=50;
     height2_start=height2=120;
 
-    move = 0.5;   // speed of movement
+    move_objects = 0.5;   // speed of movement
 
-    pit_start_x=80;
-    line_y=wheel_y=height-r_abs-20;
+    pit_start_x=80;  
+    
+    line_y=wheel_y=250-r_abs-20;
+        
     }
 
    
 //-----------------------------------------------------------------------------
-
-    function setup() {  // creates canvas in div "animation-canvas"
-      var myCanvas =createCanvas(500, 250);
+function setup() {
+  createCanvas(400, 400);
+  canvasH=250;
+  canvasW=500;
+      var myCanvas =createCanvas(canvasW, canvasH);
       myCanvas.parent("animation-canvas");
-    }
-   
+    
+}
 
     function draw() {
         if(btnClicked){
@@ -80,7 +85,7 @@ sendBtn.onclick= function(){
             // ground:
             line(0,line_y,pit_start_x,line_y); 
             line(pit_start_x,line_y,pit_start_x+r_abs,line_y+r);
-            line(pit_start_x+r_abs,line_y+r,width,line_y+r);
+            line(pit_start_x+r_abs,line_y+r,canvasW,line_y+r);
 
             // objects:
             ellipse(object_x+radius, wheel_y-radius, radius*2,radius*2);
@@ -99,9 +104,9 @@ sendBtn.onclick= function(){
             // movement:
             if(r_abs<=radius*1.5 && animationCheck.checked ){    // if r isn't too big or too small, && user wants to display animation
 
-                pit_start_x=pit_start_x-move;     // move ground, object stays on place
+                pit_start_x=pit_start_x-move_objects;     // move ground, object stays on place
 
-                // restart animation:
+                //restart animation:
                 if(pit_start_x<-100 && index>499){
                     pit_start_x=80;
                 
@@ -123,22 +128,25 @@ sendBtn.onclick= function(){
                   index++;
                 }
 
-                // animate wheel movement trought obstacle - decide - up or down
+                //animate wheel movement trought obstacle - decide - up or down
                 if(pit_start_x+radius/3<object_x+radius && line_y+r>wheel_y){
 
-                    wheel_y=wheel_y+move;
-                    height1=height1-move;
-                    height2=height2-move;
+                    wheel_y=wheel_y+move_objects;
+                    height1=height1-move_objects;
+                    height2=height2-move_objects;
                     }
                   
                 if(pit_start_x-radius/3<object_x+radius && line_y+r<wheel_y ){
                     
-                    wheel_y=wheel_y-move;
-                    height1=height1+move;
-                    height2=height2+move;
+                    wheel_y=wheel_y-move_objects;
+                    height1=height1+move_objects;
+                    height2=height2+move_objects;
                   }
             
               }
         }
       }
+
+
+
 
