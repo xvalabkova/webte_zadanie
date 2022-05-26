@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Zadanie6</title>
+
+
+	<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.js"></script>
+	<link rel="stylesheet" type="text/css" href="/../z.A,d!a,IE3/bootstrap.min.css" />
+	<!-- <link rel="stylesheet" href="../styles/myStyles.css">-->
+	<script>
+		 //spustene = false;
+		$(document).ready(function () {
+			var ws = new WebSocket("wss://site70.webte.fei.stuba.sk:9000");
+			
+			
+
+			ws.onopen = function () { console.log("Connection established"); };
+			ws.onerror = function (error) { console.log("Unknown WebSocket Error " + JSON.stringify(error)); };
+			ws.onmessage = function (e) {
+				var data = JSON.parse(e.data);
+				console.log(data);
+				if(data.users){
+					writeUsers(data.users);
+					listeners();
+				}
+			};
+			ws.onclose = function () { console.log("Connection closed - Either the host or the client has lost connection"); }
+
+			
+			function writeUsers(users){
+				$("#users").html('');
+				for (const i in users) {
+					//console.log(i);
+					//console.log(users[i].name);
+					//console.log(`${i[name]}: ${users[i]}`);
+					//console.log(`${i}: ${users[i][name]}`);
+				$("#users").append('<span>' + users[i].name + '</span><input type="radio" id="'+users[i].name+'" name="users" class="users" checked><br>')
+				}
+				
+			}
+			function sendData(data) {
+				let obj = {
+					cmdLine: document.getElementById('cmdLine').innerHTML
+					};
+				try {
+				console.log(obj);
+				ws.send(JSON.stringify(obj));
+				} catch (exception) {
+					console.log(exception);
+				}
+			//}
+				
+			}
+			function listeners() {
+				const users = document.getElementsByClassName('users');
+				//console.log(obrs);
+				for (var i = 0; i < users.length; i++) {
+					users[i].addEventListener('click', function (e) {
+						//console.log(e.target.getAttribute('id'));
+						sendData(e.target.getAttribute('id'));
+					}, false);
+				}
+			}
+			$("#play").click(play);
+			function play() {
+				let name = {
+					name: document.querySelector('input[name="name"]').value,
+					first: true
+				};
+
+				try {
+					ws.send(JSON.stringify(name));
+				} catch (exception) {
+					console.log(exception);
+				}
+
+			}
+			});
+
+		</script>
+	</head>
+<body >
+	<!-- 
+	<section id="title">
+        <div class="container-fluid">
+
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <a class="navbar-brand" href=""></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Výber userov
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" > Slovenčina<i class="fas lvl fa-check-circle"></i></a></li>
+                            <li><a class="dropdown-item" >English<i class="fas lvl fa-check-circle"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </section>
+
+	<input type="radio" id="1" name="users" value="Vy" checked>
+  		<label for="1">Vy</label>
+	 -->
+	<div id="users" class="container text-center">
+	</div>
+	<div id="menu" class="container">
+		<form action="" class="text-center">
+			<h3>Údaje používateľa:</h3>
+			<label for="name">Zadajte meno:</label>
+			<input type="text" name="name" id="name">
+			
+			<br>
+			
+		</form>
+		
+		<div id="play" class="container text-center">
+			<button id="play" class="btn-success">Spustiť</button>
+		</div class="container text-center">
+		<input id="cmdLine" type="text" value="1+1=5">
+		<input id="plotData" type="text" value="x=5,y=0.12;x=6,y=0.14">
+
+	</div>
+
+	<!-- <input id="msg" type="text" />
+  	<button id="send" class="btn-success" >Send</button> 
+	  <div id="log"></div>
+-->
+		
+
+</body>
+
+</html>
